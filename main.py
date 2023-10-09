@@ -119,17 +119,23 @@ class LlamaSettings(QMainWindow):
         self.model_entry.resize(520, 30)
         self.model_entry.setStyleSheet("background-color: #444; color: #FFF;")
 
+        #seed parameters here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! very important!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        self.seedEntry = QLineEdit(self)
+        self.seedEntry.resize(100, 30)
+        self.seedEntry.move(0, 40)
+        self.seedEntry.setStyleSheet("background-color: #555; color: #FFF;")
+
         self.apply_button = QPushButton("Apply", self)
         self.apply_button.clicked.connect(self.applied)
-        self.apply_button.move(0, 40)
+        self.apply_button.move(0, 80)
         self.apply_button.setStyleSheet("background-color: #555; color: #FFF;")
 
         self.txt_instruction = QLabel("Enter the name of your model file(the file must be in 'models' folder)", self)
-        self.txt_instruction.move(110, 40)
+        self.txt_instruction.move(110, 80)
         self.txt_instruction.resize(410, 30)
         self.txt_instruction.setStyleSheet("color: #FFF;")
 
-        self.setGeometry(100, 100, 520, 80)
+        self.setGeometry(100, 100, 520, 120)
         self.show()
     def applied(self): 
         prev_model = open("pmodel.txt", "w")
