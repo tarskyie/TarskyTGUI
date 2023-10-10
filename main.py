@@ -12,10 +12,13 @@ class LlamaGUI(QWidget):
         super().__init__()
         self.initUI()
     
-    def getmodel(self, modelname):
+    def getmodel(self, modelname, seed):
         modelpath = "./models/" + modelname
         print(modelpath)
-        self.model = Llama(model_path = modelpath, n_ctx=4096, seed=random.randint(1, 100000))
+        if seed == "-1" or seed == "":
+            seed = random.randint(1, 10000000)
+        print("SEED: " + str(seed))
+        self.model = Llama(model_path = modelpath, n_ctx=4096, seed=seed)
 
     def initUI(self):
         # Set dark theme colors
@@ -98,8 +101,6 @@ class LlamaGUI(QWidget):
     def clear_text(self):
         self.output_text.setText("TarskyTGUI is a game that uses power of AI to generate game story on run. Game gives you seed for your journey and you input your actions to continue story. Have fun!\nNow you can ask it generate you a story")
         self.input_entry.clear()
-        #ToDo: make smthing to get "clear" button making a new seed
-        #self.model = Llama(seed=random.randint(1, 100000))
 
 class LlamaSettings(QMainWindow):
     def __init__(self):
@@ -149,7 +150,7 @@ class LlamaSettings(QMainWindow):
         prev_model.close()
         self.w = LlamaGUI()
         self.w.show()
-        self.w.getmodel(self.model_entry.text())
+        self.w.getmodel(self.model_entry.text(), self.seedEntry.text())
         print("Ready!")
 
 if __name__ == '__main__':
