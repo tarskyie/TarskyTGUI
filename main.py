@@ -109,7 +109,7 @@ class LlamaSettings(QMainWindow):
         self.setStyleSheet("background-color: #222; color: #FFF;")
         self.setWindowTitle("Open Dungeon Launcher")
 
-        self.model_entry = QLineEdit(self)
+        self.model_entry = QLineEdit("model name here",self)
         try: 
             pmodel = open("pmodel.txt", "r")
             self.model_entry.setText(pmodel.read())
@@ -121,9 +121,15 @@ class LlamaSettings(QMainWindow):
 
         #seed parameters here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! very important!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         self.seedEntry = QLineEdit(self)
+        self.seedEntry.setValidator(QIntValidator())
         self.seedEntry.resize(100, 30)
+        self.seedEntry.setStyleSheet("background-color: #444; color: #FFF;")
         self.seedEntry.move(0, 40)
-        self.seedEntry.setStyleSheet("background-color: #555; color: #FFF;")
+
+        self.seedTxt = QLabel("seed, -1 for random seed", self)
+        self.seedTxt.move(110, 40)
+        self.seedTxt.resize(300, 30)
+        self.seedEntry.setStyleSheet("color: #FFF;")
 
         self.apply_button = QPushButton("Apply", self)
         self.apply_button.clicked.connect(self.applied)
