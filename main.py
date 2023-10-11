@@ -18,7 +18,7 @@ class LlamaGUI(QWidget):
         if seed == "-1" or seed == "":
             seed = random.randint(1, 10000000)
         if ctx == "":
-            ctx = 1
+            ctx = 4096
         print("SEED: " + str(seed))
         self.model = Llama(model_path = modelpath, n_ctx=abs(int(ctx)), seed=int(seed))
 
