@@ -12,7 +12,7 @@ class LlamaGUI(QWidget):
         super().__init__()
         self.initUI()
     
-    def getmodel(self, modelname, seed, ctx):
+    def getmodel(self, modelname, seed, ctx, threads):
         modelpath = "./models/" + modelname
         print(modelpath)
         if seed == "-1" or seed == "":
@@ -20,7 +20,7 @@ class LlamaGUI(QWidget):
         if ctx == "":
             ctx = 4096
         print("SEED: " + str(seed))
-        self.model = Llama(model_path = modelpath, n_ctx=abs(int(ctx)), seed=int(seed))
+        self.model = Llama(model_path = modelpath, n_ctx=abs(int(ctx)), seed=int(seed), n_threads=int(threads))
 
     def initUI(self):
         # Set dark theme colors
@@ -137,6 +137,13 @@ class LlamaSettings(QMainWindow):
         self.ctxEntry.move(110, 40)
         self.ctxEntry.setPlaceholderText("n_ctx")
 
+        self.threadEntry = QLineEdit("2", self)
+        self.threadEntry.setValidator(QIntValidator())
+        self.threadEntry.resize(100, 30)
+        self.threadEntry.setStyleSheet("background-color: #444; color: #FFF;")
+        self.threadEntry.move(220, 40)
+        self.threadEntry.setPlaceholderText("threads")
+
         self.apply_button = QPushButton("Apply", self)
         self.apply_button.clicked.connect(self.applied)
         self.apply_button.move(0, 80)
@@ -155,7 +162,7 @@ class LlamaSettings(QMainWindow):
         prev_model.close()
         self.w = LlamaGUI()
         self.w.show()
-        self.w.getmodel(self.model_entry.text(), self.seedEntry.text(), self.ctxEntry.text())
+        self.w.getmodel(self.model_entry.text(), self.seedEntry.text(), self.ctxEntry.text(), self.threadEntry.text())
         print("Ready!")
 
 if __name__ == '__main__':
