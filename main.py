@@ -12,13 +12,13 @@ class LlamaGUI(QWidget):
         super().__init__()
         self.initUI()
     
-    def getmodel(self, modelname, seed):
+    def getmodel(self, modelname, seed, ctx):
         modelpath = "./models/" + modelname
         print(modelpath)
         if seed == "-1" or seed == "":
             seed = random.randint(1, 10000000)
         print("SEED: " + str(seed))
-        self.model = Llama(model_path = modelpath, n_ctx=4096, seed=int(seed))
+        self.model = Llama(model_path = modelpath, n_ctx=ctx, seed=int(seed))
 
     def initUI(self):
         # Set dark theme colors
@@ -153,7 +153,7 @@ class LlamaSettings(QMainWindow):
         prev_model.close()
         self.w = LlamaGUI()
         self.w.show()
-        self.w.getmodel(self.model_entry.text(), self.seedEntry.text())
+        self.w.getmodel(self.model_entry.text(), self.seedEntry.text(), self.ctxEntry.text())
         print("Ready!")
 
 if __name__ == '__main__':
