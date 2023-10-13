@@ -1,7 +1,7 @@
 import sys
 import random
 from random import randint, seed
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QLineEdit, QPushButton, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QLineEdit, QPushButton, QWidget, QFileDialog
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
@@ -13,14 +13,13 @@ class LlamaGUI(QWidget):
         self.initUI()
     
     def getmodel(self, modelname, seed, ctx, threads):
-        modelpath = "./models/" + modelname
-        print(modelpath)
+        #modelpath = "./models/" + modelname
         if seed == "-1" or seed == "":
             seed = random.randint(1, 10000000)
         if ctx == "":
             ctx = 4096
         print("SEED: " + str(seed))
-        self.model = Llama(model_path = modelpath, n_ctx=abs(int(ctx)), seed=int(seed), n_threads=int(threads))
+        self.model = Llama(model_path = modelname, n_ctx=abs(int(ctx)), seed=int(seed), n_threads=int(threads))
 
     def initUI(self):
         # Set dark theme colors
@@ -119,9 +118,14 @@ class LlamaSettings(QMainWindow):
             pmodel.close()
         except:
             print("no such file as 'pmodel.txt'")
-        self.model_entry.resize(520, 30)
+        self.model_entry.resize(400, 30)
         self.model_entry.setStyleSheet("background-color: #444; color: #FFF;")
-        self.model_entry.setPlaceholderText("model name (put models in 'models' folder)")
+        self.model_entry.setPlaceholderText("model path")
+
+        self.selectButton = QPushButton("Select file", self)
+        self.selectButton.clicked.connect(self.selectFile)
+        self.selectButton.move(410, 0)
+        self.selectButton.setStyleSheet("background-color: #555; color: #FFF;")
 
         self.seedEntry = QLineEdit("-1", self)
         self.seedEntry.setValidator(QIntValidator())
@@ -156,6 +160,11 @@ class LlamaSettings(QMainWindow):
 
         self.setGeometry(100, 100, 520, 120)
         self.show()
+    def selectFile(self):
+        fname = QFileDialog.getOpenFileName(self, 'Open file', 
+   '.\\',"GGUF Files (*.gguf)")
+        print(fname[0])
+        self.model_entry.setText(fname[0])
     def applied(self): 
         prev_model = open("pmodel.txt", "w")
         prev_model.write(self.model_entry.text())
