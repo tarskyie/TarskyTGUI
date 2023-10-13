@@ -92,10 +92,11 @@ class LlamaGUI(QWidget):
 
     def generate_text(self):
         prompt = self.output_text.toPlainText() + "User: " + self.dosay.text() + self.input_entry.text() + "\nGame story:"
-        generated_raw = self.model(prompt, max_tokens=int(self.predict_entry.text()), stop=["\n"], temperature=0.8)
-        choices = generated_raw["choices"]
-        generated_text = str(choices[0]["text"])
-        print(generated_text)
+        generated_raw = self.model(prompt, max_tokens=int(self.predict_entry.text()), stop=["\n"], temperature=0.8, stream=True)
+        result = ""
+        for output in generated_raw:
+            result += output['choices'][0]['text']
+            print(result)
         self.output_text.append(self.dosay.text() + " " + self.input_entry.text() + "\nGame story: " + generated_text)
         self.input_entry.clear()
 
