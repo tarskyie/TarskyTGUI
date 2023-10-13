@@ -94,11 +94,12 @@ class LlamaGUI(QWidget):
         prompt = self.output_text.toPlainText() + "User: " + self.dosay.text() + self.input_entry.text() + "\nGame story:"
         generated_raw = self.model(prompt, max_tokens=int(self.predict_entry.text()), stop=["\n"], temperature=0.8, stream=True)
         result = ""
+        self.output_text.append(self.dosay.text() + " " + self.input_entry.text())
+        self.input_entry.clear()
         for output in generated_raw:
             result += output['choices'][0]['text']
-            print(result)
-        self.output_text.append(self.dosay.text() + " " + self.input_entry.text() + "\nGame story: " + generated_text)
-        self.input_entry.clear()
+            print(output['choices'][0]['text'], end = '')
+        self.output_text.append("Game story: " + result)
 
     def clear_text(self):
         self.output_text.setText("TarskyTGUI is a game that uses power of AI to generate game story on run. Game gives you seed for your journey and you input your actions to continue story. Have fun!\nNow you can ask it generate you a story")
