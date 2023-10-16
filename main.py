@@ -1,7 +1,7 @@
 import sys
 import random
 from random import randint, seed
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QLineEdit, QPushButton, QWidget, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QLineEdit, QPushButton, QWidget, QFileDialog, QCheckBox
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
@@ -149,6 +149,11 @@ class LlamaSettings(QMainWindow):
         self.threadEntry.setStyleSheet("background-color: #444; color: #FFF;")
         self.threadEntry.move(220, 40)
         self.threadEntry.setPlaceholderText("threads")
+
+        self.cboxStream = QCheckBox("Streaming(console)", self)
+        self.cboxStream.setChecked(True)
+        self.cboxStream.move(330, 40)
+        self.cboxStream.resize(160, 30)
 
         self.apply_button = QPushButton("Apply", self)
         self.apply_button.clicked.connect(self.applied)
