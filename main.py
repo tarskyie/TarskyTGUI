@@ -12,7 +12,7 @@ class LlamaGUI(QWidget):
         super().__init__()
         self.initUI()
     
-    def getmodel(self, modelname, seed, ctx, threads):
+    def getmodel(self, modelname, seed, ctx, threads, boolStream):
         #modelpath = "./models/" + modelname
         if seed == "-1" or seed == "":
             seed = random.randint(1, 10000000)
@@ -20,6 +20,7 @@ class LlamaGUI(QWidget):
             ctx = 4096
         print("SEED: " + str(seed))
         self.model = Llama(model_path = modelname, n_ctx=abs(int(ctx)), seed=int(seed), n_threads=int(threads))
+        self.boolStream1 = boolStream
 
     def initUI(self):
         # Set dark theme colors
@@ -36,7 +37,7 @@ class LlamaGUI(QWidget):
         self.output_text.setReadOnly(False)
         self.output_text.move(20, 50)
         self.output_text.resize(960, 400)
-        self.output_text.setText("TarskyTGUI is a game that uses power of AI to generate game story on run. Game gives you seed for your journey and you input your actions to continue story. Have fun!\nNow you can ask it generate you a story")
+        self.output_text.setText("Open-Dungeon is a game that uses power of AI to generate game story on run. Game gives you seed for your journey and you input your actions to continue story. Have fun!\nNow you can ask it generate you a story")
         self.output_text.setStyleSheet("background-color: #333; color: #FFF;")
 
         self.input_label = QLabel("Enter a prompt:", self)
@@ -92,17 +93,18 @@ class LlamaGUI(QWidget):
 
     def generate_text(self):
         prompt = self.output_text.toPlainText() + "User: " + self.dosay.text() + self.input_entry.text() + "\nGame story:"
-        generated_raw = self.model(prompt, max_tokens=int(self.predict_entry.text()), stop=["\n"], temperature=0.8, stream=True)
+        generated_raw = self.model(prompt, max_tokens=int(self.predict_entry.text()), stop=["\n"], temperature=0.8, stream=self.boolStream1)
         result = ""
         self.output_text.append(self.dosay.text() + " " + self.input_entry.text())
         self.input_entry.clear()
-        for output in generated_raw:
-            result += output['choices'][0]['text']
-            print(output['choices'][0]['text'], end = '')
-        self.output_text.append("Game story: " + result)
+        if self.boolStream1 == True:
+            for output in generated_raw:
+                result += output['choices'][0]['text']
+                print(output['choices'][0]['text'], end = '')
+        self.output_text.append("Game story: " + str(generated_raw['choices'][0]["text"]))
 
     def clear_text(self):
-        self.output_text.setText("TarskyTGUI is a game that uses power of AI to generate game story on run. Game gives you seed for your journey and you input your actions to continue story. Have fun!\nNow you can ask it generate you a story")
+        self.output_text.setText("Open-Dungeon is a game that uses power of AI to generate game story on run. Game gives you seed for your journey and you input your actions to continue story. Have fun!\nNow you can ask it generate you a story")
         self.input_entry.clear()
 
 class LlamaSettings(QMainWindow):
@@ -178,7 +180,7 @@ class LlamaSettings(QMainWindow):
         prev_model.close()
         self.w = LlamaGUI()
         self.w.show()
-        self.w.getmodel(self.model_entry.text(), self.seedEntry.text(), self.ctxEntry.text(), self.threadEntry.text())
+        self.w.getmodel(self.model_entry.text(), self.seedEntry.text(), self.ctxEntry.text(), self.threadEntry.text(), self.cboxStream.isChecked())
         print("Ready!")
 
 if __name__ == '__main__':
